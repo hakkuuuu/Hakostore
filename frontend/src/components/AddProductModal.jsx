@@ -64,9 +64,9 @@ function AddProductModal() {
                     Select a category
                   </option>
 
-                  <option value="electronics">Electronics</option>
-                  <option value="clothing">Clothing</option>
-                  <option value="accessories">Accessories</option>
+                  <option value="Electronics">Electronics</option>
+                  <option value="Clothing">Clothing</option>
+                  <option value="Accessories">Accessories</option>
                 </select>
               </div>
             </div>

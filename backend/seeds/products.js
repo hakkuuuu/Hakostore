@@ -46,6 +46,15 @@ const SAMPLE_PRODUCTS = [
         image:
             "https://i.pinimg.com/736x/41/98/c2/4198c246b5625556ea5d1546c1f1ab21.jpg",
     },
+    {
+        name: "Nirvana Shirt",
+        price: 79.99,
+        category: 'Electronics',
+        description:
+            "A stylish t-shirt featuring the iconic Nirvana logo, perfect for fans of the band.",
+        image:
+            "https://i.pinimg.com/736x/1d/ce/6e/1dce6e4063bed5b50c5b2af72c54bee6.jpg",
+    },
 ];
 
 async function seedDatabase() {

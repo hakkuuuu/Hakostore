@@ -13,6 +13,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 const __dirname = path.resolve();
+const DEBUG = process.env.DEBUG === 'true';
 
 app.use(express.json()); 
 app.use(cors());
@@ -21,6 +22,18 @@ app.use(helmet({
     crossOriginEmbedderPolicy: false,
 })); 
 app.use(morgan('dev'));
+
+// Host restriction middleware
+app.use((req, res, next) => {
+  if (DEBUG) {
+    const allowedHosts = ['localhost', '127.0.0.1'];
+    const host = req.hostname || req.headers.host?.split(':')[0];
+    if (!allowedHosts.includes(host)) {
+      return res.status(403).send('Forbidden: Host not allowed in DEBUG mode');
+    }
+  }
+  next();
+});
 
 // apply arcjet middleware rate limiting to all routes
 app.use(async (req, res, next) => {
@@ -51,12 +64,12 @@ app.use(async (req, res, next) => {
     }
 });
 
+// Place all routes above this line
 app.use("/api/products", productRoutes);
 
 if (process.env.NODE_ENV === 'production') {
     // serve static files from the React app
     app.use(express.static(path.join(__dirname, '/frontend/dist')));
-
     app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, 'frontend', 'dist', 'index.html'));
     });
@@ -67,6 +80,14 @@ app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
+// Centralized error handler
+app.use((err, req, res, next) => {
+    console.error('Unhandled error:', err);
+    res.status(err.status || 500).json({
+        success: false,
+        message: err.message || 'Internal Server Error',
+    });
+});
 
 // this initDB function will create the products table if it doesn't exist
 async function initDB() {

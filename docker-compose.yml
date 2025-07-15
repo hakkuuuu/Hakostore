@@ -3,9 +3,10 @@ services:
   backend:
     build: ./backend
     env_file:
-      - ../.env
+      - ../.env  # or './.env' if your .env is in the root
     environment:
-      - NODE_ENV=production
+      - DEBUG=true
+      - NODE_ENV=development
     ports:
       - "3001:3001"
     volumes:

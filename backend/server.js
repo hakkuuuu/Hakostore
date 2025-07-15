@@ -23,17 +23,16 @@ app.use(helmet({
 })); 
 app.use(morgan('dev'));
 
-// Host restriction middleware
-app.use((req, res, next) => {
-  if (DEBUG) {
+if (process.env.DEBUG === 'true') {
+  app.use((req, res, next) => {
     const allowedHosts = ['localhost', '127.0.0.1'];
     const host = req.hostname || req.headers.host?.split(':')[0];
     if (!allowedHosts.includes(host)) {
       return res.status(403).send('Forbidden: Host not allowed in DEBUG mode');
     }
-  }
-  next();
-});
+    next();
+  });
+}
 
 // apply arcjet middleware rate limiting to all routes
 app.use(async (req, res, next) => {

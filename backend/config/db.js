@@ -1,14 +1,16 @@
 import { neon } from "@neondatabase/serverless";
 import dotenv from "dotenv";
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const rootDir = join(__dirname, '../..');
 
-const { PGHOST, PG_DATABASE, PG_USER, PG_PASSWORD } = process.env;
+dotenv.config({ path: join(rootDir, '.env') });
 
-// create a sql connection using our env variables
-export const sql = neon(
-    `postgres://${PG_USER}:${PG_PASSWORD}@${PGHOST}/${PG_DATABASE}?sslmode=require`
-)
+// create a sql connection using DATABASE_URL
+export const sql = neon(process.env.DATABASE_URL);
 
 // this sql function we export is used as a tagged template literal
 // so we can write our sql queries like this:
